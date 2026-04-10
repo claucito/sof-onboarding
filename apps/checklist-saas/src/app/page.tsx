@@ -1,16 +1,25 @@
 import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
+import { requireUserId } from "@/lib/require-user";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+type Props = { searchParams?: Promise<Record<string, string | string[] | undefined>> };
+
+export default async function HomePage({ searchParams }: Props) {
+  const userId = await requireUserId();
+  const sp = (await searchParams) ?? {};
+  const err = typeof sp.error === "string" ? sp.error : undefined;
+
   const [templates, checklists] = await Promise.all([
     prisma.template.findMany({
+      where: { userId },
       orderBy: { createdAt: "desc" },
       take: 20,
     }),
     prisma.checklist.findMany({
+      where: { userId },
       orderBy: { createdAt: "desc" },
       take: 20,
     }),
@@ -18,13 +27,13 @@ export default async function HomePage() {
 
   return (
     <>
-      <nav className="no-print" style={{ marginBottom: "1.5rem" }}>
-        <Link href="/templates/new">Nueva plantilla</Link>
-      </nav>
       <h1>Checklist MVP</h1>
+      {err === "template-not-found" ? (
+        <p className="error">No se encontró esa plantilla o no te pertenece.</p>
+      ) : null}
       <p className="lead">
-        Plantillas reutilizables y listas con exportación Markdown. Flujo feliz en &lt;10 min: crear
-        plantilla → generar checklist → marcar ítems → exportar o imprimir a PDF.
+        Plantillas reutilizables y listas con exportación Markdown y PDF. Flujo feliz en &lt;10 min:
+        registrar → plantilla → checklist → marcar ítems → exportar.
       </p>
 
       <h2>Plantillas</h2>
@@ -39,7 +48,7 @@ export default async function HomePage() {
               <h3>
                 <Link href={`/templates/${t.id}`}>{t.title}</Link>
               </h3>
-              <div className="meta">Actualizado {t.createdAt.toISOString().slice(0, 10)}</div>
+              <div className="meta">Creada {t.createdAt.toISOString().slice(0, 10)}</div>
             </div>
           ))}
         </div>

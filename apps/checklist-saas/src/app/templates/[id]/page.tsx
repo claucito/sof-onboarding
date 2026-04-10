@@ -3,13 +3,15 @@ import { notFound } from "next/navigation";
 
 import { createChecklistFromTemplate } from "@/app/actions/templates";
 import { prisma } from "@/lib/prisma";
+import { requireUserId } from "@/lib/require-user";
 
 type Props = { params: Promise<{ id: string }> };
 
 export default async function TemplateDetailPage({ params }: Props) {
+  const userId = await requireUserId();
   const { id } = await params;
-  const template = await prisma.template.findUnique({
-    where: { id },
+  const template = await prisma.template.findFirst({
+    where: { id, userId },
     include: { items: { orderBy: { sortOrder: "asc" } } },
   });
 
@@ -19,9 +21,6 @@ export default async function TemplateDetailPage({ params }: Props) {
 
   return (
     <>
-      <nav className="no-print" style={{ marginBottom: "1.5rem" }}>
-        <Link href="/">← Inicio</Link>
-      </nav>
       <h1>{template.title}</h1>
       <p className="lead">
         Plantilla con {template.items.length} ítems. Genera una lista editable a partir de ella.

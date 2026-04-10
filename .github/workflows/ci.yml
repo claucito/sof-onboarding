@@ -65,6 +65,8 @@ jobs:
         run: npm run build:checklist-saas
         env:
           DATABASE_URL: file:./prisma/ci.db
+          # Placeholder solo para empaquetado/Next; en preview/prod usar secreto real ≥ 32 caracteres.
+          AUTH_SECRET: ci-build-placeholder-not-a-real-secret-min-32-chars
 
       - name: Upload landing-waitlist (preview artifact)
         uses: actions/upload-artifact@v4

@@ -1,15 +1,17 @@
 import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
+import { requireUserId } from "@/lib/require-user";
 
 import { PrintToolbar } from "./PrintToolbar";
 
 type Props = { params: Promise<{ id: string }> };
 
 export default async function ChecklistPrintPage({ params }: Props) {
+  const userId = await requireUserId();
   const { id } = await params;
-  const checklist = await prisma.checklist.findUnique({
-    where: { id },
+  const checklist = await prisma.checklist.findFirst({
+    where: { id, userId },
     include: { items: { orderBy: { sortOrder: "asc" } } },
   });
 

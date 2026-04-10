@@ -1,25 +1,20 @@
 import { NextResponse } from "next/server";
 
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { slugify } from "@/lib/slugify";
 
 type Params = { params: Promise<{ id: string }> };
 
-function slugify(title: string): string {
-  return (
-    title
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/\p{M}/gu, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "")
-      .slice(0, 60) || "checklist"
-  );
-}
-
 export async function GET(_req: Request, { params }: Params) {
+  const session = await getSession();
+  if (!session) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+
   const { id } = await params;
-  const checklist = await prisma.checklist.findUnique({
-    where: { id },
+  const checklist = await prisma.checklist.findFirst({
+    where: { id, userId: session.userId },
     include: { items: { orderBy: { sortOrder: "asc" } } },
   });
 
