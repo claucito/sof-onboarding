@@ -21,9 +21,10 @@ Monorepo ligero para MVPs, landings y PoCs. Cada producto vive bajo `apps/<nombr
 | `npm run build:landing-waitlist` | Build estático landing                          |
 | `npm run build:api-demo`         | Compila API PoC (Fastify)                       |
 | `npm run build:web-demo`         | Build panel Vite/React                          |
+| `npm run build:checklist-saas`   | Build Next.js MVP #3 (checklist / plantillas)   |
 | `npm run test:api-demo`          | Tests Vitest (api-demo)                         |
 
-Los proyectos en `apps/*` pueden añadir sus propios scripts; la raíz agrupa el mínimo común. PoC MVP #2: `apps/api-demo` + `apps/web-demo`.
+Los proyectos en `apps/*` pueden añadir sus propios scripts; la raíz agrupa el mínimo común. MVP #2: `apps/api-demo` + `apps/web-demo`. MVP #3: `apps/checklist-saas`.
 
 ## Convenciones
 
@@ -34,7 +35,7 @@ Los proyectos en `apps/*` pueden añadir sus propios scripts; la raíz agrupa el
 
 ## CI y deploy
 
-- **CI**: workflow en `.github/workflows/ci.yml` (lint, formato, typecheck, builds y artefacto de la landing).
+- **CI**: workflow en `.github/workflows/ci.yml` (lint, formato, typecheck, builds de landing, api-demo, web-demo, checklist-saas y artefacto de la landing).
 - **Deploy landing (GitHub Pages)**: `.github/workflows/deploy-landing-pages.yml` — ver `docs/deploy.md` para activar Pages y variables.
 - **Guía detallada**: `docs/deploy.md` (preview vs producción mínima, checklist por MVP).
 
@@ -44,4 +45,4 @@ Priorización y criterios de éxito: `docs/mvp-backlog.md`.
 
 ## Próximos pasos sugeridos
 
-- Elegir el MVP #1 con CEO y crear `apps/<nombre>/` + tareas de implementación.
+- Desplegar preview de `apps/checklist-saas` siguiendo `docs/deploy.md` §8 cuando haga falta demo pública.
