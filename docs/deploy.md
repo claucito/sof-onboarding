@@ -51,6 +51,14 @@ Workflow: [.github/workflows/deploy-landing-pages.yml](../.github/workflows/depl
 
 **Preview en PR:** sigue siendo el artefacto `landing-waitlist-dist` del workflow [ci.yml](../.github/workflows/ci.yml).
 
-## 7. Siguiente mejora
+## 7. `apps/api-demo` + `apps/web-demo` — PoC API + panel (MVP #2)
+
+1. **Autenticación / exposición:** la API valida `Authorization: Bearer` con `DEMO_API_KEY` (ver [apps/api-demo/.env.example](../apps/api-demo/.env.example)). El SPA lee `VITE_DEMO_API_KEY` en build: **no** uses esa clave en frontales 100% públicos; limítalo a **preview, VPN o red interna**, o coloca un proxy/gateway que añada el header y no exponga la clave al navegador.
+2. **CORS:** `CORS_ORIGIN` en la API (lista separada por comas o vacío para reflejar `Origin` en desarrollo). En producción restringe orígenes conocidos.
+3. **Datos demo:** SQLite en `DATABASE_PATH`; migraciones en `apps/api-demo/migrations/`. Tras arrancar la API, `npm run seed -w api-demo` carga filas de ejemplo (ver README del paquete).
+4. **CI:** [ci.yml](../.github/workflows/ci.yml) corre `test:api-demo`, `build:api-demo` y `build:web-demo` con `VITE_API_URL` / `VITE_DEMO_API_KEY` de placeholder para validar el empaquetado.
+5. **Preview verificable:** levantar API (`npm run start -w api-demo` tras `build` y variables de entorno) y servir `apps/web-demo/dist/` con un servidor estático configurando en build las mismas `VITE_*` que apunten a esa API, **o** ejecutar `npm run dev` en ambos workspaces según [apps/web-demo/README.md](../apps/web-demo/README.md).
+
+## 8. Siguiente mejora
 
 Workflow de deploy con **entorno `production` y aprobadores** en GitHub (revisión manual antes de publicar) y, si aplica, `Dockerfile` en apps con servidor.
