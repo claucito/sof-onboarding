@@ -47,6 +47,13 @@ jobs:
       - name: Build landing-waitlist
         run: npm run build:landing-waitlist
 
+      - name: Verify waitlist form in static output
+        run: |
+          if ! grep -q "<form" apps/landing-waitlist/dist/index.html; then
+            echo "::error::El HTML generado no contiene <form>. Define el secreto del repo WAITLIST_FORM_ACTION (URL del proveedor) y asegúrate de que LANDING_WAITLIST_SITE_URL apunte al dominio público de Pages; luego vuelve a ejecutar este workflow."
+            exit 1
+          fi
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

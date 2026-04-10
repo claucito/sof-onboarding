@@ -45,7 +45,7 @@ Workflow: [.github/workflows/deploy-landing-pages.yml](../.github/workflows/depl
 
 1. En el repo de GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions** (el flujo sube el artefacto estático oficial).
 2. Variable de repositorio `LANDING_WAITLIST_SITE_URL`: URL pública final de la landing (por ejemplo `https://<usuario>.github.io/<repo>/` o dominio custom). Astro usa esto como `site` y para redirecciones coherentes.
-3. Secreto opcional `WAITLIST_FORM_ACTION`: misma semántica que en CI (Formspree / proveedor del formulario).
+3. Secreto `WAITLIST_FORM_ACTION`: URL del proveedor (Formspree / Getform / etc.). El workflow de Pages **falla** si el HTML generado no incluye `<form>` (típico cuando el secreto falta o no llega al job), para no publicar otra vez la variante “preview sin backend”.
 4. El deploy corre en **push a `main`/`master`** cuando cambian `apps/landing-waitlist/`, la raíz del lockfile o el propio workflow; también se puede lanzar a mano con **Actions → Deploy landing-waitlist → Run workflow**.
 5. **Seguridad:** nunca pegues tokens PAT en comentarios de issues ni en código. Crea el token en GitHub → Developer settings → revoca cualquier token expuesto y guarda uno nuevo solo como **Actions secret** del repo (p. ej. si algún proveedor lo exige). Para Pages con el flujo oficial suele bastar el `GITHUB_TOKEN` del workflow (permisos `pages: write` ya declarados en el YAML).
 
