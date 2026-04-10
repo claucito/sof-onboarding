@@ -6,11 +6,7 @@ import { redirect } from "next/navigation";
 
 import { signSession } from "@/lib/auth-tokens";
 import { SESSION_COOKIE_NAME } from "@/lib/session-constant";
-import {
-  MAX_EMAIL_LENGTH,
-  MAX_PASSWORD_LENGTH,
-  MIN_PASSWORD_LENGTH,
-} from "@/lib/limits";
+import { MAX_EMAIL_LENGTH, MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "@/lib/limits";
 import { prisma } from "@/lib/prisma";
 
 function normalizeEmail(raw: string): string {

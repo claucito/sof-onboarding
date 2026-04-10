@@ -1,7 +1,11 @@
 import Link from "next/link";
 
 import { createTemplate } from "@/app/actions/templates";
-import { MAX_TEMPLATE_LINE_LENGTH, MAX_TEMPLATE_LINES, MAX_TEMPLATE_TITLE_LENGTH } from "@/lib/limits";
+import {
+  MAX_TEMPLATE_LINE_LENGTH,
+  MAX_TEMPLATE_LINES,
+  MAX_TEMPLATE_TITLE_LENGTH,
+} from "@/lib/limits";
 
 type Props = { searchParams?: Promise<Record<string, string | string[] | undefined>> };
 
@@ -20,9 +24,13 @@ export default async function NewTemplatePage({ searchParams }: Props) {
 
       {err === "missing-title" ? <p className="error">El título es obligatorio.</p> : null}
       {err === "missing-lines" ? <p className="error">Añade al menos una línea no vacía.</p> : null}
-      {err === "title-too-long" ? <p className="error">El título supera el límite permitido.</p> : null}
+      {err === "title-too-long" ? (
+        <p className="error">El título supera el límite permitido.</p>
+      ) : null}
       {err === "too-many-lines" ? <p className="error">Demasiados ítems en la plantilla.</p> : null}
-      {err === "line-too-long" ? <p className="error">Alguna línea supera el límite de caracteres.</p> : null}
+      {err === "line-too-long" ? (
+        <p className="error">Alguna línea supera el límite de caracteres.</p>
+      ) : null}
 
       <form action={createTemplate} className="card stack">
         <div>

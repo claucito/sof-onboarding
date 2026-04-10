@@ -48,10 +48,10 @@ Requisitos: Node ≥ 20, npm (workspaces del monorepo).
 
 ## Variables de entorno
 
-| Variable        | Uso                                                |
-| --------------- | -------------------------------------------------- |
-| `DATABASE_URL`  | SQLite local o Postgres en preview/prod.           |
-| `AUTH_SECRET`   | Firma JWT; **obligatorio**, mínimo 32 caracteres.  |
+| Variable       | Uso                                               |
+| -------------- | ------------------------------------------------- |
+| `DATABASE_URL` | SQLite local o Postgres en preview/prod.          |
+| `AUTH_SECRET`  | Firma JWT; **obligatorio**, mínimo 32 caracteres. |
 
 Ver [`.env.example`](./.env.example).
 

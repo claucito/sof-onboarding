@@ -11,7 +11,9 @@ export default async function LoginPage({ searchParams }: Props) {
   return (
     <>
       <h1>Iniciar sesión</h1>
-      <p className="lead">Accede con el email y contraseña de tu cuenta (aislamiento por usuario).</p>
+      <p className="lead">
+        Accede con el email y contraseña de tu cuenta (aislamiento por usuario).
+      </p>
 
       {err === "missing" ? <p className="error">Completa email y contraseña.</p> : null}
       {err === "invalid" ? <p className="error">Credenciales incorrectas.</p> : null}

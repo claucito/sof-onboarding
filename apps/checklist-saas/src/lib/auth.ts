@@ -1,10 +1,6 @@
 import { cookies } from "next/headers";
 
-import {
-  SESSION_COOKIE_NAME,
-  verifySessionToken,
-  type SessionPayload,
-} from "@/lib/auth-tokens";
+import { SESSION_COOKIE_NAME, verifySessionToken, type SessionPayload } from "@/lib/auth-tokens";
 
 export { SESSION_COOKIE_NAME, signSession, type SessionPayload } from "@/lib/auth-tokens";
 

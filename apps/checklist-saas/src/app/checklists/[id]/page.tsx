@@ -38,7 +38,11 @@ export default async function ChecklistPage({ params }: Props) {
         <a className="button secondary" href={`/api/checklists/${checklist.id}/export.md`} download>
           Descargar .md
         </a>
-        <a className="button secondary" href={`/api/checklists/${checklist.id}/export.pdf`} download>
+        <a
+          className="button secondary"
+          href={`/api/checklists/${checklist.id}/export.pdf`}
+          download
+        >
           Descargar .pdf
         </a>
         <Link
