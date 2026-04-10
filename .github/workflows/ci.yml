@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ASTRO_TELEMETRY_DISABLED: "1"
+  # Opcional: secreto del repo → build con formulario real (Formspree/Getform). Si falta, el build muestra el aviso de configuración.
+  PUBLIC_WAITLIST_FORM_ACTION: ${{ secrets.WAITLIST_FORM_ACTION }}
+  # Opcional: variable del repo → URL canónica y redirección _next coherentes con el dominio de preview/prod.
+  PUBLIC_SITE_URL: ${{ vars.LANDING_WAITLIST_SITE_URL }}
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format
+        run: npm run format:check
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build landing-waitlist
+        run: npm run build:landing-waitlist
+
+      - name: Test api-demo
+        run: npm run test:api-demo
+
+      - name: Build api-demo
+        run: npm run build:api-demo
+
+      - name: Build web-demo
+        run: npm run build:web-demo
+        env:
+          # Valores de empaquetado para CI; en preview/prod configurar URL y clave reales (vars/secrets).
+          VITE_API_URL: http://127.0.0.1:3333
+          VITE_DEMO_API_KEY: ci-build-placeholder-not-a-real-secret
+
+      - name: DB checklist-saas (SQLite CI)
+        run: npm run db:push -w checklist-saas -- --accept-data-loss
+        env:
+          DATABASE_URL: file:./prisma/ci.db
+
+      - name: Build checklist-saas
+        run: npm run build:checklist-saas
+        env:
+          DATABASE_URL: file:./prisma/ci.db
+
+      - name: Upload landing-waitlist (preview artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: landing-waitlist-dist
+          path: apps/landing-waitlist/dist/
+          if-no-files-found: error

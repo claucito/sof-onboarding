@@ -1,0 +1,63 @@
+name: Deploy landing-waitlist (GitHub Pages)
+
+# Camino reproducible: mismo build que en CI, publicación explícita a Pages.
+# Activar en el repo: Settings → Pages → Build and deployment → Source: GitHub Actions.
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "apps/landing-waitlist/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/deploy-landing-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-landing-waitlist
+  cancel-in-progress: false
+
+env:
+  ASTRO_TELEMETRY_DISABLED: "1"
+  PUBLIC_WAITLIST_FORM_ACTION: ${{ secrets.WAITLIST_FORM_ACTION }}
+  PUBLIC_SITE_URL: ${{ vars.LANDING_WAITLIST_SITE_URL }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Quality gate (landing)
+        run: npm run lint && npm run format:check
+
+      - name: Build landing-waitlist
+        run: npm run build:landing-waitlist
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/landing-waitlist/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

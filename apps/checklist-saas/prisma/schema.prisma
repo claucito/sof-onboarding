@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Template {
+  id         String          @id @default(cuid())
+  title      String
+  createdAt  DateTime        @default(now())
+  items      TemplateItem[]
+  checklists Checklist[]
+}
+
+model TemplateItem {
+  id         String   @id @default(cuid())
+  templateId String
+  template   Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  sortOrder  Int
+  label      String
+
+  @@index([templateId])
+}
+
+model Checklist {
+  id         String          @id @default(cuid())
+  title      String
+  templateId String?
+  template   Template?       @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  createdAt  DateTime        @default(now())
+  items      ChecklistItem[]
+}
+
+model ChecklistItem {
+  id          String    @id @default(cuid())
+  checklistId String
+  checklist   Checklist @relation(fields: [checklistId], references: [id], onDelete: Cascade)
+  sortOrder   Int
+  label       String
+  done        Boolean   @default(false)
+
+  @@index([checklistId])
+}

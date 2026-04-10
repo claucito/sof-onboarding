@@ -1,0 +1,31 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <header class="top">
+      <span class="logo" aria-hidden="true">◇</span>
+      <span class="brand">Tu producto</span>
+    </header>
+    <slot />
+    <footer class="foot">
+      <small>© {new Date().getFullYear()} · Datos ficticios en preview</small>
+    </footer>
+  </body>
+</html>

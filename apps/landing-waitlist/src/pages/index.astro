@@ -1,0 +1,69 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const formAction = import.meta.env.PUBLIC_WAITLIST_FORM_ACTION?.trim() ?? "";
+const hasForm = formAction.length > 0;
+const siteBase = (import.meta.env.SITE || "").replace(/\/$/, "");
+const thanksPath = "/gracias";
+const nextUrl = siteBase ? `${siteBase}${thanksPath}` : "";
+const formSubject = import.meta.env.PUBLIC_WAITLIST_FORM_SUBJECT?.trim() ?? "";
+---
+
+<Layout
+  title="Lista de espera — acceso anticipado"
+  description="Únete a la lista de espera: acceso anticipado y novedades sin ruido."
+>
+  <main id="contenido" class="wrap">
+    <p class="eyebrow">Próximo lanzamiento</p>
+    <h1>Construimos algo enfocado en claridad y velocidad</h1>
+    <p class="lede">
+      Deja tu email y te avisamos cuando abramos plazas. Sin spam: solo hitos que importan.
+    </p>
+    {
+      hasForm ? (
+        <form class="card" method="post" action={formAction}>
+          {nextUrl ? <input type="hidden" name="_next" value={nextUrl} /> : null}
+          {formSubject ? <input type="hidden" name="_subject" value={formSubject} /> : null}
+          <input
+            class="hp"
+            type="text"
+            name="_gotcha"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+          />
+          <label class="field">
+            <span class="label">Correo</span>
+            <input
+              type="email"
+              name="email"
+              required
+              autoComplete="email"
+              inputMode="email"
+              placeholder="tu@empresa.com"
+            />
+          </label>
+          <label class="field">
+            <span class="label">Nombre (opcional)</span>
+            <input type="text" name="name" autoComplete="name" placeholder="Cómo te llamamos" />
+          </label>
+          <button class="btn" type="submit">
+            Unirme a la lista
+          </button>
+          <p class="fineprint">
+            Al enviar aceptas ser contactado/a sobre este lanzamiento. Puedes darte de baja en
+            cualquier momento.
+          </p>
+        </form>
+      ) : (
+        <div class="card notice" role="status">
+          <p>
+            <strong>Preview sin backend:</strong> define <code>PUBLIC_WAITLIST_FORM_ACTION</code>{" "}
+            (p. ej. Formspree o Getform) y vuelve a construir. Ver <code>README.md</code> y{" "}
+            <code>.env.example</code>.
+          </p>
+        </div>
+      )
+    }
+  </main>
+</Layout>

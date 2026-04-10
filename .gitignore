@@ -1,0 +1,12 @@
+node_modules/
+dist/
+**/.astro/
+.next/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+apps/api-demo/data/
+apps/checklist-saas/prisma/*.db

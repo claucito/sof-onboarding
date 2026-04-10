@@ -1,0 +1,17 @@
+{
+  "name": "landing-waitlist",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^5.7.12"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
