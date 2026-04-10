@@ -20,6 +20,20 @@ env:
 jobs:
   quality:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: checklist_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
@@ -56,15 +70,10 @@ jobs:
           VITE_API_URL: http://127.0.0.1:3333
           VITE_DEMO_API_KEY: ci-build-placeholder-not-a-real-secret
 
-      - name: DB checklist-saas (SQLite CI)
-        run: npm run db:push -w checklist-saas -- --accept-data-loss
-        env:
-          DATABASE_URL: file:./prisma/ci.db
-
       - name: Build checklist-saas
         run: npm run build:checklist-saas
         env:
-          DATABASE_URL: file:./prisma/ci.db
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/checklist_ci?schema=public
           # Placeholder solo para empaquetado/Next; en preview/prod usar secreto real ≥ 32 caracteres.
           AUTH_SECRET: ci-build-placeholder-not-a-real-secret-min-32-chars
 

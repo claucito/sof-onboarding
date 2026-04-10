@@ -61,11 +61,11 @@ Workflow: [.github/workflows/deploy-landing-pages.yml](../.github/workflows/depl
 
 ## 8. `apps/checklist-saas` — micro-SaaS checklist / plantillas (MVP #3)
 
-1. **Build:** `npm run build:checklist-saas` en la raíz (tras `npm ci`). CI ya ejecuta `prisma db push` con SQLite efímero y este build; ver [.github/workflows/ci.yml](../.github/workflows/ci.yml).
-2. **Variables:** copiar [apps/checklist-saas/.env.example](../apps/checklist-saas/.env.example) → `.env` en esa app. **Obligatorias en runtime:** `DATABASE_URL` y **`AUTH_SECRET`** (≥ 32 caracteres; firma JWT de sesión). En preview/prod con SQLite en disco, usar un volumen persistente o cambiar a Postgres (`DATABASE_URL` + `provider` en `schema.prisma` según README del paquete).
+1. **Build:** `npm run build:checklist-saas` en la raíz (tras `npm ci`). El build del paquete ejecuta `prisma migrate deploy` antes de `next build`; CI usa **Postgres 16** en servicio (ver [.github/workflows/ci.yml](../.github/workflows/ci.yml)).
+2. **Variables:** copiar [apps/checklist-saas/.env.example](../apps/checklist-saas/.env.example) → `.env` en esa app. **Obligatorias en runtime:** `DATABASE_URL` (**PostgreSQL**) y **`AUTH_SECRET`** (≥ 32 caracteres; firma JWT de sesión).
 3. **Arranque:** `npm run start -w checklist-saas` (puerto **3040** por defecto) tras build; en local, `npm run dev -w checklist-saas`.
 4. **Preview demostrable:** desplegar como cualquier app Next.js (Vercel, Fly.io, Railway, etc.) con `DATABASE_URL` y `AUTH_SECRET` en el panel; registrar un usuario de prueba y crear una plantilla desde la UI (flujo documentado en [apps/checklist-saas/README.md](../apps/checklist-saas/README.md)).
-5. **Vercel (monorepo):** en el proyecto, **Root Directory** = `apps/checklist-saas` (el `vercel.json` de esa carpeta usa `installCommand` / `buildCommand` desde la raíz del repo). En despliegues serverless usa **Postgres** u otra BD gestionada, no SQLite en filesystem efímero.
+5. **Vercel (monorepo):** en el proyecto, **Root Directory** = `apps/checklist-saas` (el `vercel.json` de esa carpeta usa `installCommand` / `buildCommand` desde la raíz del repo). Configura **`DATABASE_URL`** (Postgres gestionado: Neon, Supabase, Vercel Postgres, etc.) y **`AUTH_SECRET`** en *Environment Variables* de Vercel (Preview + Production). El build aplica migraciones automáticamente.
 6. **URL HTTPS de preview (canónica):** documentar aquí la URL pública una vez exista el primer deploy (p. ej. `https://….vercel.app`), para enlazarla desde smoke/evidencias sin buscar en el panel del proveedor.
 
 ## 9. Siguiente mejora

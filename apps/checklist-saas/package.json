@@ -4,11 +4,12 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "next dev --port 3040",
-    "build": "prisma generate && next build",
+    "build": "prisma migrate deploy && prisma generate && next build",
     "start": "next start --port 3040",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
+    "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio"
   },
   "dependencies": {

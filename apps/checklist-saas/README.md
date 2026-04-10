@@ -6,7 +6,7 @@ Micro-SaaS de **plantillas** y **checklists** con **cuentas por usuario** (email
 
 - Plantillas de tareas repetibles sin hojas de cálculo; cada usuario ve solo sus datos.
 - Flujo feliz corto: registro → plantilla → checklist → marcar ítems → exportar `.md` / `.pdf` o imprimir.
-- Next.js + Prisma; SQLite en local/CI y camino documentado hacia Postgres en preview/prod.
+- Next.js + Prisma; **PostgreSQL** en local, CI y preview/prod (Vercel/Railway/Neon, etc.).
 
 ## Autenticación e aislamiento (modelo MVP)
 
@@ -34,10 +34,9 @@ No incluye (fuera de alcance explícito):
 Requisitos: Node ≥ 20, npm (workspaces del monorepo).
 
 1. Desde la raíz del monorepo: `npm install`
-2. Copia variables: `cp apps/checklist-saas/.env.example apps/checklist-saas/.env` y **ajusta `AUTH_SECRET`** (≥ 32 caracteres).
-3. Si ya tenías `prisma/dev.db` **sin** columna `userId`, borra la base o el archivo y vuelve a crearla (cambio de esquema).
-4. Aplica el esquema: `npm run db:push -w checklist-saas`
-5. Arranca: `npm run dev -w checklist-saas` → [http://127.0.0.1:3040](http://127.0.0.1:3040) (redirige a `/login` si no hay sesión).
+2. Levanta Postgres (Neon, Supabase, Docker, etc.) y copia variables: `cp apps/checklist-saas/.env.example apps/checklist-saas/.env` → **ajusta `DATABASE_URL`** y **`AUTH_SECRET`** (≥ 32 caracteres).
+3. Aplica migraciones: `npm run db:migrate:deploy -w checklist-saas` (o `npm run db:push -w checklist-saas` solo en entornos desechables).
+4. Arranca: `npm run dev -w checklist-saas` → [http://127.0.0.1:3040](http://127.0.0.1:3040) (redirige a `/login` si no hay sesión).
 
 ### Flujo de prueba (&lt;10 min)
 
@@ -50,15 +49,15 @@ Requisitos: Node ≥ 20, npm (workspaces del monorepo).
 
 | Variable       | Uso                                               |
 | -------------- | ------------------------------------------------- |
-| `DATABASE_URL` | SQLite local o Postgres en preview/prod.          |
+| `DATABASE_URL` | Cadena **PostgreSQL** (local, CI o gestionada).   |
 | `AUTH_SECRET`  | Firma JWT; **obligatorio**, mínimo 32 caracteres. |
 
 Ver [`.env.example`](./.env.example).
 
 ## Base de datos y backup (MVP temprano)
 
-- Por defecto: **SQLite** (`DATABASE_URL=file:./prisma/dev.db`). Copia `prisma/dev.db` para backup manual.
-- Para **Postgres** gestionado: `DATABASE_URL` del proveedor, cambia `provider` en `prisma/schema.prisma` y ejecuta migraciones según tu política (`migrate` vs `db push` solo en entornos desechables).
+- **PostgreSQL** obligatorio: `DATABASE_URL` apunta a tu instancia (local Docker, Neon, Supabase, RDS, etc.).
+- Migraciones versionadas en `prisma/migrations/`; en deploy: `prisma migrate deploy` (ya incluido en el script `build` del paquete).
 
 ## Deploy (preview / prod)
 
@@ -66,4 +65,4 @@ Alineado con [docs/deploy.md](../../docs/deploy.md) §8: build `npm run build:ch
 
 ## CI
 
-El workflow del monorepo ejecuta `prisma db push` con SQLite efímero y `npm run build -w checklist-saas` con `AUTH_SECRET` de placeholder para el build. No afecta a otras apps del monorepo salvo el job compartido.
+El workflow del monorepo levanta **Postgres 16** en servicio, aplica migraciones vía el `build` del workspace y compila con `AUTH_SECRET` de placeholder. No afecta a otras apps del monorepo salvo el job compartido.
