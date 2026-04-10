@@ -2,6 +2,8 @@
 
 Monorepo ligero para MVPs, landings y PoCs. Cada producto vive bajo `apps/<nombre>/` con su propio `package.json` cuando haga falta.
 
+**Repo remoto:** [sof-onboarding](https://github.com/claucito/sof-onboarding) (onboarding Software Factory; landing waitlist en `apps/landing-waitlist`).
+
 ## Stack por defecto
 
 - **Runtime**: Node.js 20+
