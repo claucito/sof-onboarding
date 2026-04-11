@@ -67,6 +67,7 @@ Workflow: [.github/workflows/deploy-landing-pages.yml](../.github/workflows/depl
 4. **Preview demostrable:** desplegar como cualquier app Next.js (Vercel, Fly.io, Railway, etc.) con `DATABASE_URL` y `AUTH_SECRET` en el panel; registrar un usuario de prueba y crear una plantilla desde la UI (flujo documentado en [apps/checklist-saas/README.md](../apps/checklist-saas/README.md)).
 5. **Vercel (monorepo):** en el proyecto, **Root Directory** = `apps/checklist-saas` (el `vercel.json` de esa carpeta usa `installCommand` / `buildCommand` desde la raíz del repo). Configura **`DATABASE_URL`** (Postgres gestionado: Neon, Supabase, Vercel Postgres, etc.) y **`AUTH_SECRET`** en *Environment Variables* de Vercel (Preview + Production). El build aplica migraciones automáticamente.
 6. **URL HTTPS de preview (canónica):** documentar aquí la URL pública una vez exista el primer deploy (p. ej. `https://….vercel.app`), para enlazarla desde smoke/evidencias sin buscar en el panel del proveedor.
+7. **GitHub Actions (preview):** con el proyecto Vercel enlazado y variables `DATABASE_URL` / `AUTH_SECRET` en el panel (Preview), añade en el repo los secretos `VERCEL_TOKEN`, `VERCEL_ORG_ID` y `VERCEL_PROJECT_ID` y ejecuta manualmente [deploy-checklist-saas-vercel.yml](../.github/workflows/deploy-checklist-saas-vercel.yml) (*Actions → Deploy checklist-saas (Vercel preview) → Run workflow*). Copia la URL de despliegue del log y actualiza el punto 6 anterior.
 
 ## 9. Siguiente mejora
 

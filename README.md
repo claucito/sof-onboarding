@@ -38,6 +38,7 @@ Los proyectos en `apps/*` pueden añadir sus propios scripts; la raíz agrupa el
 - **CI**: workflow en `.github/workflows/ci.yml` (lint, formato, typecheck, builds de landing, api-demo, web-demo, checklist-saas y artefacto de la landing).
 - **Deploy landing (GitHub Pages)**: `.github/workflows/deploy-landing-pages.yml` — ver `docs/deploy.md` para activar Pages y variables.
 - **Guía detallada**: `docs/deploy.md` (preview vs producción mínima, checklist por MVP).
+- **checklist-saas (Vercel preview):** `.github/workflows/deploy-checklist-saas-vercel.yml` (manual; requiere secretos del repo + env en Vercel — ver `docs/deploy.md` §8).
 
 ## Backlog de MVPs
 
